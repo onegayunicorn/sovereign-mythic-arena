@@ -9,13 +9,40 @@
 <div class="wrap">
 <header class="site-head"><a class="brand" href="#top"><span class="brand-mark">M//S</span><span><b>Mythic Stack</b><small>Battle Royal · v0.1</small></span></a><div class="head-tools"><span class="badge"><i class="dot"></i> Local ledger · seed mode</span><span class="badge date">31 Oct 2026</span><button id="reset" class="btn ghost">Reset</button></div></header>
 <section id="top" class="hero">
-<div><p class="eyebrow">From mythos to physics · six contenders · one ledger</p><h1 class="display">Build the <em>myth</em>.<br>Then make it <span class="outline">survive</span>.</h1><p class="lede">A contender declares a symbolic stack, then compiles it into an artifact that runs, measures, and falsifies. Scores are weighted across mythic coherence, mathematical hardening, physical realizability, reproducibility, and craft. A bout is not a general model ranking.</p></div>
+<div><p class="eyebrow">From mythos to physics · six contenders · one ledger</p><h1 class="display">Build the <em>myth</em>.<br>Then make it <span class="outline">survive</span>.</h1><p class="lede">A contender declares a symbolic stack, then compiles it into a proposed artifact and illustrative score. The independent Chronos panel runs its own ideal-pendulum simulation; it does not change bout scores or establish a physical measurement. Scores are weighted across five axes. A bout is not a general model ranking.</p></div>
 <div class="stats-grid"><div><b class="display" id="statContenders">6</b><small>contenders</small></div><div><b class="display">5</b><small>axes</small></div><div><b class="display" id="statBouts">0</b><small>bouts logged</small></div><div><b class="display teal">4</b><small>hard gates</small></div></div>
 </section>
 <main class="main-grid">
 <section class="panel"><header class="panel-head"><span>The tally · per-bout average</span><span>W–L</span></header><div id="standings" aria-live="polite"></div><footer class="panel-foot"><span>Bout-only board</span><b>Not a general model leaderboard</b><span class="push">Avg of weighted scores</span></footer></section>
 <section class="panel forge"><header class="panel-head"><span>Bout forge</span><span>Deterministic seed</span></header><div class="selects"><label>Red corner<select id="selA"></select></label><label>Blue corner<select id="selB"></select></label></div><button id="run" class="btn run">Run bout <span>→</span></button><div id="result" class="result"></div><div class="gates"><span>✓ Build</span><span>✓ Units</span><span>✓ Headless</span><span>✓ Hash</span></div><p class="fine">Demo mode: gate badges and seed scores are illustrative, not harness evidence. Each run derives jitter from a deterministic seed and appends a hash-linked demo entry.</p></section>
 </main>
+<section id="chronos" class="panel chronos" aria-labelledby="chronosTitle">
+  <header class="panel-head"><span>Chronos · independent pendulum simulation</span><span class="sim-tag">SIMULATED EVIDENCE · NOT A MEASUREMENT</span></header>
+  <div class="chronos-intro"><div><p class="eyebrow">Standalone browser RK4 solver</p><h2 id="chronosTitle" class="display">Pendulum / <em>in motion</em></h2><p>Ideal simple pendulum only. This panel is independent of the bout, contender scores, hard-gate badges, and local ledger.</p></div><div class="chronos-actions"><button id="chronosPlay" class="btn ghost" type="button">Pause motion</button><button id="chronosReset" class="btn ghost" type="button">Reset parameters</button></div></div>
+  <div class="chronos-grid">
+    <div class="sim-stage">
+      <svg class="pendulum-svg" viewBox="0 0 320 250" role="img" aria-labelledby="pendulumTitle pendulumDesc">
+        <title id="pendulumTitle">Animated simple pendulum</title><desc id="pendulumDesc">A bob swings on a rod from a fixed pivot according to the browser RK4 simulation.</desc>
+        <path class="stage-guide" d="M16 225H304 M160 24V225"/><path id="pendulumTrail" class="pendulum-trail" d=""/><circle class="pivot" cx="160" cy="24" r="5"/><line id="pendulumRod" class="pendulum-rod" x1="160" y1="24" x2="250" y2="150"/><circle id="pendulumBob" class="pendulum-bob" cx="250" cy="150" r="14"/><text class="svg-label" x="172" y="40">PIVOT</text><text class="svg-label" x="20" y="242">IDEALIZED · NO DAMPING</text>
+      </svg>
+      <div id="chronosState" class="sim-status" role="status" aria-live="polite">Preparing browser simulation…</div>
+    </div>
+    <div class="chronos-data">
+      <div class="chronos-controls">
+        <label>Length · m<input name="length_m" type="number" min="0.1" max="5" step="0.05" value="1" inputmode="decimal"></label>
+        <label>Mass · kg<input name="mass_kg" type="number" min="0.05" max="20" step="0.05" value="1" inputmode="decimal"></label>
+        <label>Initial angle · rad<input name="initial_angle_rad" type="number" min="-3.05" max="3.05" step="0.01" value="0.610865" inputmode="decimal"></label>
+        <label>Initial angular velocity · rad/s<input name="initial_angular_velocity_rad_s" type="number" min="-10" max="10" step="0.1" value="0" inputmode="decimal"></label>
+        <label>Gravity · m/s²<input name="gravity_m_s2" type="number" min="0.1" max="30" step="0.01" value="9.80665" inputmode="decimal"></label>
+        <label>Duration · s<input name="duration_s" type="number" min="1" max="60" step="1" value="12" inputmode="numeric"></label>
+        <label>Time step · s<input name="dt_s" type="number" min="0.0005" max="0.05" step="0.0005" value="0.005" inputmode="decimal"></label>
+      </div>
+      <div id="chronosReadout" class="chronos-readout" aria-live="polite"></div>
+      <div class="verification-box"><div><b>Optional local backend verification</b><p>POSTs the current parameters to <code>/api/physics/pendulum</code>. The browser solver works without it.</p></div><button id="verifyPhysics" class="btn ghost" type="button">Check local API</button><div id="verificationState" class="verification-state" role="status" aria-live="polite">Verification not checked. On GitHub Pages or while the API is offline, verification is unavailable; browser simulation remains usable.</div></div>
+      <p class="fine chronos-note">RK4 trace and energy drift are outputs of this idealized simulation, not physical measurements or a model evaluation. They never enter the leaderboard or hash ledger.</p>
+    </div>
+  </div>
+</section>
 <section class="panel ledger"><header class="panel-head"><span>Ledger · append-only demo</span><div class="ledger-tools"><button id="copy" class="btn ghost">Copy JSON</button><span id="clock">UTC</span></div></header><div class="table-wrap"><table><thead><tr><th>Bout</th><th>Matchup</th><th>Winner</th><th>Card</th><th>Seed</th><th>Entry hash</th></tr></thead><tbody id="ledgerBody"></tbody></table></div><footer class="panel-foot">Demo only · localStorage ledger · no API, signed ballots, or cryptographic verification</footer></section>
 <footer class="site-foot"><span>Mythic Stack // Battle Royal · demo v0.1 · <a href="./modelark/">ModelArk status mock</a></span><span>A win here is a win here. It is not a leaderboard ranking.</span></footer>
 </div><div id="toast" class="toast" role="status" aria-live="polite"></div><script type="module" src="app.js"></script>
