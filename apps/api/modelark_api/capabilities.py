@@ -94,7 +94,7 @@ def _validated_ollama_base_url(value: str) -> str:
 def _ollama_client(base_url: str) -> httpx.Client:
     return httpx.Client(
         base_url=base_url,
-        timeout=httpx.Timeout(2.0, connect=1.0),
+        timeout=httpx.Timeout(120.0, connect=2.0),
         trust_env=False,
         follow_redirects=False,
     )
@@ -172,7 +172,12 @@ def generate_inference(prompt: str) -> dict[str, Any]:
         with _ollama_client(base_url) as client:
             response = client.post(
                 "/api/generate",
-                json={"model": model, "prompt": prompt, "stream": False},
+                json={
+                    "model": model,
+                    "prompt": prompt,
+                    "stream": False,
+                    "options": {"num_predict": 256},
+                },
             )
             response.raise_for_status()
             result = response.json()

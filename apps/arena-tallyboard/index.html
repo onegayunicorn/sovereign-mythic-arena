@@ -43,6 +43,32 @@
     </div>
   </div>
 </section>
+<section id="localModelBench" class="panel model-bench" aria-labelledby="modelBenchTitle">
+  <header class="panel-head"><span>Local Model Bench · isolated inference</span><span class="sim-tag">NO SCORE · NO LEDGER WRITE</span></header>
+  <div class="model-bench-body">
+    <div class="model-bench-intro"><div><p class="eyebrow">Same-origin local API</p><h2 id="modelBenchTitle" class="display">Ask the <em>local model</em></h2><p>Responses are separate from Chronos, bout standings, gates, and the ledger. Only a response marked <code>local_model_output</code> is identified as actual local-model output.</p></div></div>
+    <div class="inference-status" aria-label="Local inference API status">
+      <div><span>Connection</span><strong id="inferenceConnection" role="status" aria-live="polite">Checking local API…</strong></div>
+      <div><span>Provider</span><strong id="inferenceProvider">—</strong></div>
+      <div><span>Model</span><strong id="inferenceModel">—</strong></div>
+      <div><span>Mode</span><strong id="inferenceMode">—</strong></div>
+      <div><span>Real model</span><strong id="inferenceReadiness">—</strong></div>
+    </div>
+    <p id="inferenceNote" class="inference-note" aria-live="polite">Checking same-origin inference status. On GitHub Pages, the local API is unavailable.</p>
+    <form id="inferenceForm" class="inference-form">
+      <label for="inferencePrompt">Prompt</label>
+      <textarea id="inferencePrompt" name="prompt" rows="4" maxlength="4000" required aria-describedby="inferencePromptHelp">For an ideal simple pendulum of length 1.0 m under g = 9.80665 m/s², derive the small-angle period and state the assumptions. Do not claim you ran a simulation or measured hardware.</textarea>
+      <p id="inferencePromptHelp" class="inference-help">A safe physics test: request a derivation, not a claim of measurement. Maximum 4,000 characters.</p>
+      <button id="generateInference" class="btn" type="submit">Generate response <span aria-hidden="true">→</span></button>
+    </form>
+    <section class="inference-result" aria-labelledby="inferenceResultTitle">
+      <div class="inference-result-head"><h3 id="inferenceResultTitle">Returned text</h3><span id="inferenceEvidence" class="evidence-chip">NO RESPONSE</span></div>
+      <p id="inferenceMetadata" class="inference-help inference-metadata">Provider/model/mode metadata appears here after a response.</p>
+      <pre id="inferenceResponse" class="inference-response" role="status" aria-live="polite">No response yet.</pre>
+      <p class="inference-help">Non-<code>local_model_output</code> responses are not verified as real local-model output and are labeled mock / non-local.</p>
+    </section>
+  </div>
+</section>
 <section class="panel ledger"><header class="panel-head"><span>Ledger · append-only demo</span><div class="ledger-tools"><button id="copy" class="btn ghost">Copy JSON</button><span id="clock">UTC</span></div></header><div class="table-wrap"><table><thead><tr><th>Bout</th><th>Matchup</th><th>Winner</th><th>Card</th><th>Seed</th><th>Entry hash</th></tr></thead><tbody id="ledgerBody"></tbody></table></div><footer class="panel-foot">Demo only · localStorage ledger · no API, signed ballots, or cryptographic verification</footer></section>
 <footer class="site-foot"><span>Mythic Stack // Battle Royal · demo v0.1 · <a href="./modelark/">ModelArk status mock</a></span><span>A win here is a win here. It is not a leaderboard ranking.</span></footer>
 </div><div id="toast" class="toast" role="status" aria-live="polite"></div><script type="module" src="app.js"></script>

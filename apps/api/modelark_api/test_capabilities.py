@@ -152,3 +152,45 @@ def test_ollama_status_recognizes_default_latest_tag(monkeypatch):
     result = client.get("/api/inference/status").json()
     assert result["real_model_available"] is True
     assert result["model"] == "llama3.2"
+
+
+def test_ollama_generation_marks_actual_local_model_output(monkeypatch):
+    class GenerateResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {"response": "The local model answered."}
+
+    class GenerateClient:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_args):
+            return None
+
+        def post(self, path, json):
+            assert path == "/api/generate"
+            assert json == {
+                "model": "qwen2.5:0.5b",
+                "prompt": "derive the period",
+                "stream": False,
+                "options": {"num_predict": 256},
+            }
+            return GenerateResponse()
+
+    monkeypatch.setenv("SOVEREIGN_INFERENCE_MODE", "ollama")
+    monkeypatch.setenv("SOVEREIGN_OLLAMA_URL", "http://127.0.0.1:11434")
+    monkeypatch.setenv("SOVEREIGN_OLLAMA_MODEL", "qwen2.5:0.5b")
+    monkeypatch.setattr(capabilities, "_ollama_client", lambda _url: GenerateClient())
+
+    response = client.post("/api/inference/generate", json={"prompt": "derive the period"})
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "provider": "ollama",
+        "model": "qwen2.5:0.5b",
+        "mode": "ollama",
+        "response": "The local model answered.",
+        "evidence_status": "local_model_output",
+    }

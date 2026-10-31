@@ -33,3 +33,80 @@ document.getElementById("copy").addEventListener("click",async()=>{try{await nav
 document.getElementById("reset").addEventListener("click",()=>{try{localStorage.removeItem(KEY)}catch{}ledger=[];seedLedger();renderStandings();renderLedger();renderResult(null);toast("Demo ledger reseeded")});
 seedLedger();renderSelects();renderStandings();renderLedger();renderResult(null);document.getElementById("clock").textContent=new Date().toISOString().slice(0,16).replace("T"," ")+" UTC";
 initChronosPanel();
+
+
+const inferenceConnection=document.getElementById("inferenceConnection");
+const inferenceProvider=document.getElementById("inferenceProvider");
+const inferenceModel=document.getElementById("inferenceModel");
+const inferenceMode=document.getElementById("inferenceMode");
+const inferenceReadiness=document.getElementById("inferenceReadiness");
+const inferenceNote=document.getElementById("inferenceNote");
+const inferenceForm=document.getElementById("inferenceForm");
+const inferencePrompt=document.getElementById("inferencePrompt");
+const inferenceResponse=document.getElementById("inferenceResponse");
+const inferenceEvidence=document.getElementById("inferenceEvidence");
+const inferenceMetadata=document.getElementById("inferenceMetadata");
+const generateInference=document.getElementById("generateInference");
+
+function inferenceField(value){return value===null||value===undefined||value===""?"—":String(value)}
+function showInferenceDisconnected(){
+  inferenceConnection.textContent="Disconnected";
+  inferenceProvider.textContent="—";
+  inferenceModel.textContent="—";
+  inferenceMode.textContent="—";
+  inferenceReadiness.textContent="Unavailable";
+  inferenceNote.textContent="Local API unavailable. This panel needs the same-origin FastAPI service; GitHub Pages has no local API, so generation is unavailable there.";
+}
+async function loadInferenceStatus(){
+  try{
+    const response=await fetch("/api/inference/status",{method:"GET",headers:{Accept:"application/json"},cache:"no-store"});
+    if(!response.ok)throw new Error(`Status endpoint returned HTTP ${response.status}.`);
+    const data=await response.json();
+    inferenceConnection.textContent="Connected";
+    inferenceProvider.textContent=inferenceField(data.provider);
+    inferenceModel.textContent=inferenceField(data.model);
+    inferenceMode.textContent=inferenceField(data.mode);
+    inferenceReadiness.textContent=data.real_model_available===true?"Available":"Not available";
+    inferenceNote.textContent=inferenceField(data.note)==="—"?"Status received from the local inference API.":String(data.note);
+  }catch{
+    showInferenceDisconnected();
+  }
+}
+inferenceForm.addEventListener("submit",async(event)=>{
+  event.preventDefault();
+  const prompt=inferencePrompt.value.trim();
+  if(!prompt){inferencePrompt.focus();return}
+  generateInference.disabled=true;
+  inferenceForm.setAttribute("aria-busy","true");
+  inferenceEvidence.classList.remove("actual");
+  inferenceEvidence.textContent="REQUEST IN PROGRESS";
+  inferenceMetadata.textContent="Waiting for provider/model/mode metadata…";
+  inferenceResponse.textContent="Generating…";
+  try{
+    const response=await fetch("/api/inference/generate",{
+      method:"POST",
+      headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({prompt})
+    });
+    if(!response.ok)throw new Error(`Generation endpoint returned HTTP ${response.status}.`);
+    const data=await response.json();
+    const evidenceStatus=typeof data.evidence_status==="string"?data.evidence_status:"";
+    const isActualLocalOutput=evidenceStatus==="local_model_output";
+    inferenceEvidence.classList.toggle("actual",isActualLocalOutput);
+    inferenceEvidence.textContent=isActualLocalOutput
+      ?"ACTUAL LOCAL MODEL OUTPUT · local_model_output"
+      :`MOCK / NON-LOCAL — NOT ACTUAL LOCAL OUTPUT · ${evidenceStatus||"evidence status missing"}`;
+    inferenceMetadata.textContent=`Provider: ${inferenceField(data.provider)} · Model: ${inferenceField(data.model)} · Mode: ${inferenceField(data.mode)} · Evidence: ${inferenceField(evidenceStatus)}`;
+    inferenceResponse.textContent=typeof data.response==="string"?data.response:"API returned no text response.";
+  }catch(error){
+    inferenceEvidence.classList.remove("actual");
+    inferenceEvidence.textContent="NO MODEL RESPONSE";
+    inferenceMetadata.textContent="No provider/model/mode metadata was received.";
+    inferenceResponse.textContent=`Generation unavailable: ${error instanceof Error?error.message:"request failed"}`;
+    if(error instanceof TypeError)showInferenceDisconnected();
+  }finally{
+    generateInference.disabled=false;
+    inferenceForm.removeAttribute("aria-busy");
+  }
+});
+loadInferenceStatus();
