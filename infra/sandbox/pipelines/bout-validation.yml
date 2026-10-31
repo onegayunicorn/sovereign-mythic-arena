@@ -1,0 +1,42 @@
+name: bout-validation
+trigger: manual
+
+# This file is declarative input for a future pipeline runner. It is not a
+# replacement for the repository's CI workflow or a signed evidence system.
+steps:
+  - name: Run RK4 physics contract
+    image: python:3.12-slim
+    network_policy: none
+    command: >-
+      python -m pytest -q apps/api/modelark_api/test_capabilities.py
+      -k 'rk4_pendulum_period_and_energy or pendulum_input_bounds'
+    artifact: artifacts/physics-test.log
+
+  - name: Run local model bench contract
+    image: alpine:3.20
+    network_policy: none
+    command: >-
+      sh -c 'test "$${SOVEREIGN_INFERENCE_MODE:-ollama}" = ollama
+      && test "$${SOVEREIGN_OLLAMA_MODEL:-qwen2.5:0.5b}" = qwen2.5:0.5b'
+    artifact: artifacts/model-bench-config.json
+
+  - name: Verify evidence-channel separation
+    image: python:3.12-slim
+    network_policy: none
+    command: >-
+      python -c "import json; record={'evidenceStatus':'demo-seed'};
+      assert 'local_model_output' not in json.dumps(record)"
+    artifact: artifacts/separation-check.json
+
+post:
+  - name: Save audit manifest
+    always: true
+    command: >-
+      python -c "import json, os, time;
+      print(json.dumps({'sandbox_id': os.getenv('SANDBOX_ID','unknown'), 'timestamp': time.time()}))"
+    artifact: artifacts/evidence-manifest.json
+
+on_failure:
+  - name: Preserve failure marker
+    command: >-
+      sh -c 'printf "%s\n" pipeline_failed > artifacts/failure.marker'
