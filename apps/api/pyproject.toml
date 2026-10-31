@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "modelark-api"
+version = "0.1.0"
+description = "Sovereign ModelArk API"
+authors = ["ModelArk Contributors"]
+packages = [{ include = "modelark_api" }]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+fastapi = "^0.115"
+uvicorn = { extras = ["standard"], version = "^0.34" }
+pydantic = "^2.10"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3"
+httpx = "^0.28"
+
+[build-system]
+requires = ["poetry-core>=1.9"]
+build-backend = "poetry.core.masonry.api"

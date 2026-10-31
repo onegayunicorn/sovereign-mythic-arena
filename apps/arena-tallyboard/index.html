@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b0d0c"><title>MYTHIC STACK // BATTLE ROYAL</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="wrap">
+<header class="site-head"><a class="brand" href="#top"><span class="brand-mark">M//S</span><span><b>Mythic Stack</b><small>Battle Royal · v0.1</small></span></a><div class="head-tools"><span class="badge"><i class="dot"></i> Local ledger · seed mode</span><span class="badge date">31 Oct 2026</span><button id="reset" class="btn ghost">Reset</button></div></header>
+<section id="top" class="hero">
+<div><p class="eyebrow">From mythos to physics · six contenders · one ledger</p><h1 class="display">Build the <em>myth</em>.<br>Then make it <span class="outline">survive</span>.</h1><p class="lede">A contender declares a symbolic stack, then compiles it into an artifact that runs, measures, and falsifies. Scores are weighted across mythic coherence, mathematical hardening, physical realizability, reproducibility, and craft. A bout is not a general model ranking.</p></div>
+<div class="stats-grid"><div><b class="display" id="statContenders">6</b><small>contenders</small></div><div><b class="display">5</b><small>axes</small></div><div><b class="display" id="statBouts">0</b><small>bouts logged</small></div><div><b class="display teal">4</b><small>hard gates</small></div></div>
+</section>
+<main class="main-grid">
+<section class="panel"><header class="panel-head"><span>The tally · per-bout average</span><span>W–L</span></header><div id="standings" aria-live="polite"></div><footer class="panel-foot"><span>Bout-only board</span><b>Not a general model leaderboard</b><span class="push">Avg of weighted scores</span></footer></section>
+<section class="panel forge"><header class="panel-head"><span>Bout forge</span><span>Deterministic seed</span></header><div class="selects"><label>Red corner<select id="selA"></select></label><label>Blue corner<select id="selB"></select></label></div><button id="run" class="btn run">Run bout <span>→</span></button><div id="result" class="result"></div><div class="gates"><span>✓ Build</span><span>✓ Units</span><span>✓ Headless</span><span>✓ Hash</span></div><p class="fine">Demo mode: gate badges and seed scores are illustrative, not harness evidence. Each run derives jitter from a deterministic seed and appends a hash-linked demo entry.</p></section>
+</main>
+<section class="panel ledger"><header class="panel-head"><span>Ledger · append-only demo</span><div class="ledger-tools"><button id="copy" class="btn ghost">Copy JSON</button><span id="clock">UTC</span></div></header><div class="table-wrap"><table><thead><tr><th>Bout</th><th>Matchup</th><th>Winner</th><th>Card</th><th>Seed</th><th>Entry hash</th></tr></thead><tbody id="ledgerBody"></tbody></table></div><footer class="panel-foot">Demo only · localStorage ledger · no API, signed ballots, or cryptographic verification</footer></section>
+<footer class="site-foot"><span>Mythic Stack // Battle Royal · demo v0.1 · <a href="./modelark/">ModelArk status mock</a></span><span>A win here is a win here. It is not a leaderboard ranking.</span></footer>
+</div><div id="toast" class="toast" role="status" aria-live="polite"></div><script type="module" src="app.js"></script>
+</body></html>

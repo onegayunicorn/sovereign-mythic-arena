@@ -1,0 +1,11 @@
+{
+  "name": "ModelArk Sovereign Live",
+  "short_name": "ModelArk",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#111410",
+  "theme_color": "#111410",
+  "scope": "./",
+  "description": "Synthetic local-first sovereign AI operations dashboard demo",
+  "icons": []
+}

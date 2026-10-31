@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://modelark.local/schemas/paean-buddy-whisper-v1.json",
+  "title": "Paean buddy check whisper",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_digest", "nonce", "verifier_id", "key_id", "verdict", "checked_evidence", "issued_at", "signature"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "manifest_digest": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "nonce": {"type": "string", "minLength": 16, "maxLength": 128},
+    "verifier_id": {"type": "string", "minLength": 1},
+    "key_id": {"type": "string", "minLength": 1},
+    "verdict": {"enum": ["accept", "reject", "abstain"]},
+    "checked_evidence": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "disagreement_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "signature": {"type": "string", "minLength": 1}
+  }
+}

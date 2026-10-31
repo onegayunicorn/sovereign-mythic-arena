@@ -1,0 +1,32 @@
+[
+  {
+    "id": "deepseek",
+    "artifact": "Chronos Pendulum",
+    "status": "proposed"
+  },
+  {
+    "id": "grok",
+    "artifact": "Euler Obelisk",
+    "status": "proposed"
+  },
+  {
+    "id": "gemini",
+    "artifact": "Kuramoto Array",
+    "status": "proposed"
+  },
+  {
+    "id": "claude",
+    "artifact": "Angular Momentum Rig",
+    "status": "proposed"
+  },
+  {
+    "id": "gpt",
+    "artifact": "Symplectic N-Body",
+    "status": "proposed"
+  },
+  {
+    "id": "llama",
+    "artifact": "Spring Lattice",
+    "status": "proposed"
+  }
+]

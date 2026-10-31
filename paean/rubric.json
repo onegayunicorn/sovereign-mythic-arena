@@ -1,0 +1,32 @@
+{
+  "version": "0.1",
+  "axes": [
+    {
+      "id": "mythic",
+      "weight": 20
+    },
+    {
+      "id": "math",
+      "weight": 25
+    },
+    {
+      "id": "physics",
+      "weight": 25
+    },
+    {
+      "id": "reproducibility",
+      "weight": 15
+    },
+    {
+      "id": "craft",
+      "weight": 15
+    }
+  ],
+  "hard_gates": [
+    "clean_pinned_build",
+    "units_and_dimensions",
+    "headless_no_network",
+    "provenance_hashes"
+  ],
+  "demoScoresAreMeasurements": false
+}
