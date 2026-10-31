@@ -93,6 +93,16 @@ The Compose file is an optional scaffold, not required for the included demo or 
 docker compose -f infra/compose/sovereign.yml up -d
 ```
 
+### Docker arena bundle
+
+For a single local deployment containing the built tallyboard, FastAPI RK4 physics API, and Ollama-backed Local Model Bench, use:
+
+```sh
+docker compose -f infra/compose/arena-local.yml up --build
+```
+
+Open `http://127.0.0.1:8000/`. The bundle downloads `qwen2.5:0.5b` into a named volume on first use. The API and Ollama share one container network namespace, so the adapter continues to use its loopback-only policy. See [infra/docker/README.md](infra/docker/README.md) for model-volume and shutdown commands. Docker is not required for the regular Node/Python development workflow.
+
 ## Deployment
 
 ### GitHub Pages

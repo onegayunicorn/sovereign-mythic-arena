@@ -1,0 +1,50 @@
+services:
+  ollama:
+    image: ollama/ollama:0.40.13
+    environment:
+      OLLAMA_HOST: 127.0.0.1:11434
+      OLLAMA_NO_CLOUD: "true"
+    volumes:
+      - ollama-models:/root/.ollama
+    ports:
+      - "${ARENA_PORT:-8000}:8000"
+      - "${OLLAMA_PORT:-11434}:11434"
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 5s
+      timeout: 3s
+      start_period: 10s
+      retries: 30
+    command: ["serve"]
+
+  model-bootstrap:
+    image: ollama/ollama:0.40.13
+    network_mode: service:ollama
+    depends_on:
+      ollama:
+        condition: service_healthy
+    environment:
+      OLLAMA_HOST: 127.0.0.1:11434
+      OLLAMA_MODEL: ${SOVEREIGN_OLLAMA_MODEL:-qwen2.5:0.5b}
+    volumes:
+      - ollama-models:/root/.ollama
+    restart: "no"
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["ollama pull \"$${OLLAMA_MODEL}\""]
+
+  arena:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    network_mode: service:ollama
+    depends_on:
+      model-bootstrap:
+        condition: service_completed_successfully
+    environment:
+      SOVEREIGN_INFERENCE_MODE: ollama
+      SOVEREIGN_OLLAMA_URL: http://127.0.0.1:11434
+      SOVEREIGN_OLLAMA_MODEL: ${SOVEREIGN_OLLAMA_MODEL:-qwen2.5:0.5b}
+    restart: unless-stopped
+
+volumes:
+  ollama-models:
